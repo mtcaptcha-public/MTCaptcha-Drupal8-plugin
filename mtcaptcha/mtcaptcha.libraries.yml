@@ -1,0 +1,10 @@
+mtcaptcha:
+  version: 1.0
+  header: true
+  js:
+    js/mtcaptcha.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

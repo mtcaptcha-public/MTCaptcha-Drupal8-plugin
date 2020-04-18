@@ -1,0 +1,181 @@
+<?php
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_help().
+ */
+function mtcaptcha_help($path, $arg) {
+  switch ($path) {
+    case 'help.page.mtcaptcha':
+      return t('<a href="@url">MTCaptcha</a>  is an efficient security solution to protect your website against spam comments and brute-force attacks.', array('@url' => 'https://www.mtcaptcha.com/'));
+  }
+} 
+ 
+/**
+* Implements hook_install().
+*/
+function mtcaptcha_install() {
+ drupal_set_message(t("Your Module settings are available under !link",
+   ['!link' => t('Administer > configurtion > Devolepment > MTCaptcha settings'),  'admin/config/config/devolepment']
+ ));
+}
+ 
+$GLOBALS['_configIdList'] = [];
+ 
+/**
+* Method to attach the mtcaptcha js to the current page..
+* @param page
+*/
+function mtcaptcha_page_attachments_alter(&$page) {
+   $config = \Drupal::config('mtcaptcha.settings');
+   $page['#attached']['drupalSettings']['config'] = json_encode(array(
+     "sitekey"       => $config->get('site_key'),
+     "autoFormValidate"  => (bool)TRUE,
+     "theme"       => $config->get('theme'),
+     "render"      => "explicit",
+     "renderQueue"       => $GLOBALS['_configIdList'],
+     "widgetSize"        => $config->get('widgetsize'),
+     "enableOption"      => $config->get('enablecaptcha'),
+     "lang"        => $config->get('language'),
+  ));
+ $page['#attached']['library'][] = 'mtcaptcha/mtcaptcha';
+}
+/**
+* Implements hook_form_alter().
+* This function adds a CAPTCHA to forms.
+*/
+function mtcaptcha_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $config = \Drupal::config('mtcaptcha.settings');
+  $user = \Drupal::currentUser();
+  $mtcaptcha_other_enable = preg_split('/\s*,\s*/', trim($config->get('other_form_id', '')));
+  $enabled_forms = array_values(array_merge($mtcaptcha_other_enable, array_values($config->get('mtcaptcha_form_enable', []))));
+  $form_state = get_object_vars($form_state);
+ if(!$user->id() && $form_id == 'user_login_form' && in_array($form_id, $enabled_forms, TRUE) ){
+   attachCaptcha($form);
+    return false;    
+  }
+
+  if(!$user->id() && $form_id == 'user_pass' && in_array($form_id, $enabled_forms, TRUE) ){
+    attachCaptcha($form);
+    return false;
+  }
+
+  if( in_array($form_id, $enabled_forms, TRUE) && 
+    (($user->id() && $config->get('enablecaptcha') == 'login') ||
+    (!$user->id()  && $config->get('enablecaptcha') == 'logout') || 
+    ($config->get('enablecaptcha') == 'all'))) {      
+      attachCaptcha($form);
+  }
+ 
+ }
+ /**
+  * Method to validate captcha while form submission
+  * @param form
+  * @param form_state
+ */ 
+ function mtcaptcha_captcha_validation(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+   $config = \Drupal::config('mtcaptcha.settings');
+   $mtcaptcha_private_key = $config->get('private_key');
+   if (empty($_POST['mtcaptcha-verifiedtoken']) || empty($mtcaptcha_private_key)) {
+     $form_state->setErrorByName('mtcaptcha',"The verification token parameter is invalid or malformed.");
+     return FALSE;
+   }
+   $resp = mtcaptcha_submit_captcha($mtcaptcha_private_key, $_POST['mtcaptcha-verifiedtoken']);
+   $resp = json_decode($resp, FALSE);
+   if ($resp->success) {
+     return TRUE;
+   }
+   else {
+     $error_codes = array(
+       'token-expired' => ('The token has expired.'),
+       'token-duplicate-cal' => ('The token has been verified already.'),
+       'bad-request' => ('The request is invalid or malformed.'),
+       'missing-input-privatekey' => ('`privatekey` parameter is missing'),
+       'missing-input-token' => (' ‘token’ parameter is missing.'),
+       'invalid-privatekey' => ('The private key is invalid or malformed.'),
+       'invalid-token' => ('The token parameter is invalid or malformed.'),
+       'invalid-token-faildecrypt' => ('The token parameter is invalid or malformed.'),
+       'privatekey-mismatch-token' => ('The token and the privatekey does not match.'),
+       'expired-sitekey-or-account' => ('The sitekey/privatekey is no longer valid due to expiration or account closure.'),
+       'network-error' => ('Something went wrong!'),
+       'unknown-error' => ('Something went wrong!')
+     );
+     foreach ($resp->fail_codes as $code) {
+       if (!isset($error_codes[$code])) {
+         $code = 'unknown-error';
+       }
+       // Shows errror message in the form if any
+       $form_state->setErrorByName('mtcaptcha',$error_codes[$code]);
+       // Stores error in the logs
+       \Drupal::logger('MTCaptcha web service')->error($error_codes[$code]);
+      }
+   }
+   return FALSE;
+ }   
+ /**
+  * Method to get response for submitted captcha
+  * @param verification token
+  * @param private key
+ */ 
+ function mtcaptcha_submit_captcha($mt_captcha_site_private_key, $mtcaptcha_verifiedtoken) {
+ 
+   $response = \Drupal::httpClient()->get("https://service.mtcaptcha.com/mtcv1/api/checktoken?privatekey={$mt_captcha_site_private_key}&token={$mtcaptcha_verifiedtoken}",
+   array('headers' => array('Accept' => 'text/plain' )));
+  
+   if ($response->getStatusCode() == 200) {
+     // The service request was successful.
+     return $response->getBody()->__toString();
+   }
+   elseif ($response->getStatusCode() < 0) {
+     // Negative status codes typically point to network or socket issues.
+     return '{"success": false, "error-codes": ["network-error"]}';
+   }
+   else {
+     // Positive none 200 status code typically means the request has failed.
+      return $response->getBody()->__toString();
+   }
+ }
+ 
+ /**
+ * Method to push generated random id in renderedQueue
+ * @param $randomId
+ */
+ function pushTorenderQueue($randomId) {?>
+   <script type="text/javascript">
+         if (typeof mtcaptchaConfig != "undefined") {   
+           // push the random id in render queue
+           mtcaptchaConfig.renderQueue.push(<?php echo "'$randomId'" ?>);
+         }
+         else { <?php
+           array_push($GLOBALS['_configIdList'], $randomId);
+         ?>
+         }
+   </script><?php
+ }
+ 
+/**
+ * Method to attach the captcha form to form fields..
+ * @param $form
+ */
+function attachCaptcha(array &$form) {
+  $form['#validate'][] = 'mtcaptcha_captcha_validation';
+  $randomId = "mtcaptcha-" . strval(rand());
+  pushTorenderQueue($randomId);
+  $form['captchaLabel'] = array(
+    '#title' => 'Captcha',
+    '#type' => 'label',
+    '#required' => TRUE
+  );
+  $form['captcha'] = array(
+    '#required' => TRUE,
+    '#markup' => '<div id="' . $randomId . '"></div>'
+  );
+  return $form;
+}
+?>
+ 
+ 
+
+

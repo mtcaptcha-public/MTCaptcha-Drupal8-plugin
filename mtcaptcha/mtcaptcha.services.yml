@@ -1,0 +1,5 @@
+services:
+  http_middleware.mtcaptcha:
+    class: Drupal\mtcaptcha\StackMiddleware\Mtcaptcha
+    tags:
+      - { name: http_middleware, priority: 180, responder: true }

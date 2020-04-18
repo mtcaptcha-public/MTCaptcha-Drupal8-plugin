@@ -1,0 +1,7 @@
+mtcaptcha.settings:
+  path: '/admin/config/development/mtcaptcha'
+  defaults:
+    _form: '\Drupal\mtcaptcha\Admin\MTCaptchaSettings'
+    _title: 'MTCaptcha'
+  requirements:
+    _permission: 'administer recaptcha'

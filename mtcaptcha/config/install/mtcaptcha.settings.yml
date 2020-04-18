@@ -1,0 +1,17 @@
+site_key: ''
+private_key: ''
+theme: 'standard'
+language: 'en'
+widgetsize: 'standard'
+enablecaptcha: 'login'
+type: 'image'
+size: ''
+tabindex: 0
+noscript: false
+login_form: false
+registration_form: false
+lost_password_form: false
+change_password_form: false
+comment_form: false
+woocommerce_checkout: false
+contact_form: false

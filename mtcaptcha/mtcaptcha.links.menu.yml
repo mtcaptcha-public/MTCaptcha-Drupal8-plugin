@@ -1,0 +1,6 @@
+mtcaptcha.settings:
+  title: 'MTCaptcha settings'
+  description: 'To enable configuration settings to enable MTCaptcha'
+  parent: system.admin_config_development
+  route_name: mtcaptcha.settings
+  weight: 1

@@ -1,0 +1,3 @@
+administer mtcaptcha:
+  title: 'Manage MTCaptcha'
+  description: 'Manage MTCaptcha settings.'
