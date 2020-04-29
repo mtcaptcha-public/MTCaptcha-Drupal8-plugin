@@ -32,7 +32,7 @@ function mtcaptcha_page_attachments_alter(&$page) {
    $config = \Drupal::config('mtcaptcha.settings');
    $page['#attached']['drupalSettings']['config'] = json_encode(array(
      "sitekey"       => $config->get('site_key'),
-     "autoFormValidate"  => (bool)TRUE,
+     "autoFormValidate"  => (bool)TRUE,     
      "theme"       => $config->get('theme'),
      "render"      => "explicit",
      "renderQueue"       => $GLOBALS['_configIdList'],
@@ -160,14 +160,18 @@ function mtcaptcha_form_alter(array &$form, FormStateInterface $form_state, $for
  * @param $form
  */
 function attachCaptcha(array &$form) {
+  $config = \Drupal::config('mtcaptcha.settings');
   $form['#validate'][] = 'mtcaptcha_captcha_validation';
   $randomId = "mtcaptcha-" . strval(rand());
   pushTorenderQueue($randomId);
-  $form['captchaLabel'] = array(
-    '#title' => 'Captcha',
-    '#type' => 'label',
-    '#required' => TRUE
-  );
+  
+  if($config->get('show_captcha_label_form') == TRUE) {
+    $form['captchaLabel'] = array(
+      '#title' => 'Captcha',
+      '#type' => 'label',
+      '#required' => TRUE
+    );
+  }
   $form['captcha'] = array(
     '#required' => TRUE,
     '#markup' => '<div id="' . $randomId . '"></div>'

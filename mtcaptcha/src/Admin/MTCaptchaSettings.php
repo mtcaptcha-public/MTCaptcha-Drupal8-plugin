@@ -203,6 +203,17 @@ class MTCaptchaSettings extends ConfigFormBase {
       '#title' => $this->t('Other Forms to enable'),
       '#type' => 'textfield'
     ];
+
+    $form['general']['show_captcha_label_form'] = [
+      '#title' =>  $this->t('Show Captcha label in the form'),
+      '#type' => 'checkbox',
+      '#default_value' => TRUE,
+      '#description' => t('Show or Hide Captcha Label in the forms'),
+      '#attributes' => array(
+            'class' => array('captcha-label'), 
+      )    
+    ];
+    
     return parent::buildForm($form, $form_state);
   }
 
@@ -214,6 +225,7 @@ class MTCaptchaSettings extends ConfigFormBase {
     $mtcaptchaConfig
       ->set('site_key', $form_state->getValue('mtcaptcha_site_key'))
       ->set('private_key', $form_state->getValue('mtcaptcha_private_key'))
+      ->set('show_captcha_label_form', $form_state->getValue('show_captcha_label_form'))
       ->set('theme', $form_state->getValue('mtcaptcha_theme'))
       ->set('language', $form_state->getValue('mtcaptcha_language'))
       ->set('widgetsize', $form_state->getValue('mtcaptcha_widgetsize'))

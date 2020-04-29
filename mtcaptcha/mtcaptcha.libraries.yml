@@ -3,6 +3,9 @@ mtcaptcha:
   header: true
   js:
     js/mtcaptcha.js: {}
+  css:
+    theme:
+      css/mtcaptcha.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once

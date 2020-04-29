@@ -1,5 +1,6 @@
 site_key: ''
 private_key: ''
+show_captcha_label_form: true
 theme: 'standard'
 language: 'en'
 widgetsize: 'standard'
@@ -13,5 +14,4 @@ registration_form: false
 lost_password_form: false
 change_password_form: false
 comment_form: false
-woocommerce_checkout: false
 contact_form: false
