@@ -97,6 +97,7 @@ INSTALLATION AND CONFIGURATION
 * Once it is Installed, then click on the Configuration under Manage menu in the admin panel
 * Then navigate to Devolepment, then click on MTCaptcha Settings
 * Configure the Mandatory Fields (Valid Site key and Private Key is required) and hit Save Configuration
+* We have provided a advanced settings to configure the MTCaptcha settings by providing JSON directly with more options
 
 HOW TO GET VALID SITE KEY AND PRIVATE KEY
 -----------------------------------------

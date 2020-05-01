@@ -15,3 +15,6 @@ lost_password_form: false
 change_password_form: false
 comment_form: false
 contact_form: false
+custom_configuration_enable: false
+custom_configuration_settings: ''     
+

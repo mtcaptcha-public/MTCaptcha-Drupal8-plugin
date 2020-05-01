@@ -8,3 +8,4 @@ php: 5.6
 core: 8.x
 libraries:
   - mtcaptcha/mtcaptcha
+  - mtcaptcha/global-scripts

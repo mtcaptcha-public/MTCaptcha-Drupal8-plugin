@@ -52,9 +52,6 @@ mtcaptcha.settings:
         comment_form:
           type: boolean
           label: 'Comment Form'
-        woocommerce_checkout:
-          type: boolean
-          label: 'Woocommerce Form'
         contact_form:
           type: boolean
           label: 'Contact Form'

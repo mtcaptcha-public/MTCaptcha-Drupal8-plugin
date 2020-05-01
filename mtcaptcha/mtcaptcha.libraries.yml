@@ -11,3 +11,17 @@ mtcaptcha:
     - core/jquery.once
     - core/drupal
     - core/drupalSettings
+
+global-scripts:
+  version: 1.0
+  header: true
+  js:
+    js/mtcaptcha-global.js: {}
+  css:
+    theme:
+      css/mtcaptcha-global.css: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
