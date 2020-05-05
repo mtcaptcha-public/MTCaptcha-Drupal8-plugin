@@ -241,12 +241,13 @@ class MTCaptchaSettings extends ConfigFormBase {
                           1. You have to <a href="https://www.mtcaptcha.com/pricing/" target="blank" rel="external">register your domain</a> and get your required keys.<br/>
                           2. Visit <a href="http://service.mtcaptcha.com/mtcv1/demo/" target="blank" rel="external">MTCaptcha demo page</a> to customize 
                           the MTCaptcha configuration.<br/> 
-                          3. Customize the <b>Basic Options</b>, <b>Custom Style</b> and <b>Custom Language</b>.<br/>
-                          4. Click on Apply button to view the changes. <br/>
-                          5. If the changes are looks good, 
+                          3. Under Basic Options, Proivde your site key in the Sitekey field. <br/>
+                          4. Customize the <b>Basic Options</b>, <b>Custom Style</b> and <b>Custom Language</b>.<br/>
+                          5. Click on Apply button to view the changes. <br/>
+                          6. If the changes are looks good, 
                           then copy the snippet located inside the <b>script</b> tag under <b>Embed Snippet</b> tab.
                           <br/>
-                          6. Paste the copied snippet to the below textbox. <br/> '),
+                          7. Paste the copied snippet to the below textbox. <br/> '),
       '#attributes' => array(
             'class' => array('captcha-label'), 
       )    
