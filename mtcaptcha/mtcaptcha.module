@@ -4,6 +4,9 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Component\Serialization\Json;
+
+$configIdList = [];
+
 /**
  * Implements hook_help().
  */
@@ -22,8 +25,6 @@ function mtcaptcha_install() {
    ['!link' => t('Administer > configurtion > Devolepment > MTCaptcha settings'),  'admin/config/config/devolepment']
  ));
 }
- 
-$GLOBALS['_configIdList'] = [];
  
 /**
 * Method to attach the mtcaptcha js to the current page..
@@ -50,12 +51,13 @@ function mtcaptcha_page_attachments_alter(&$page) {
       ];
      
   } else {
+      $GLOBALS['configIdList'] = isset($GLOBALS['configIdList']) ? $GLOBALS['configIdList'] : [];
       $page['#attached']['drupalSettings']['config'] = json_encode(array(
         "sitekey"       => $config->get('site_key'),
         "autoFormValidate"  => (bool)TRUE,     
         "theme"       => $config->get('theme'),
         "render"      => "explicit",
-        "renderQueue"       => $GLOBALS['_configIdList'],
+        "renderQueue"       => $GLOBALS['configIdList'],
         "widgetSize"        => $config->get('widgetsize'),
         "enableOption"      => $config->get('enablecaptcha'),
         "lang"        => $config->get('language'),
@@ -196,7 +198,8 @@ function mtcaptcha_captcha_admin_validation(&$form, \Drupal\Core\Form\FormStateI
            mtcaptchaConfig.renderQueue.push(<?php echo "'$randomId'" ?>);
          }
          else { <?php
-           array_push($GLOBALS['_configIdList'], $randomId);
+           $GLOBALS['configIdList'] = isset($GLOBALS['configIdList']) ? $GLOBALS['configIdList'] : [];
+           array_push($GLOBALS['configIdList'], $randomId);
          ?>
          }
    </script><?php
