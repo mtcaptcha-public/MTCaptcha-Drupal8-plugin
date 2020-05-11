@@ -4,3 +4,10 @@
 textarea#edit-custom-config-setting {
     width: 50%;
 }
+.red {
+    color:#FF0000;    
+}
+
+.captcha-label {
+    font-weight: bold !important;
+}

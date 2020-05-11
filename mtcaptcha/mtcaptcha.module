@@ -192,7 +192,7 @@ function mtcaptcha_captcha_admin_validation(&$form, \Drupal\Core\Form\FormStateI
  */
  function pushTorenderQueue($randomId) {?>
    <script type="text/javascript">
-         if (typeof mtcaptchaConfig != "undefined") {   
+         if (typeof mtcaptchaConfig != "undefined") {           
           //  console.log(mtcapthaConfig);
            // push the random id in render queue
            mtcaptchaConfig.renderQueue.push(<?php echo "'$randomId'" ?>);
@@ -221,16 +221,16 @@ function attachCaptcha(array &$form) {
     $markup = '<div id="' . $randomId . '"></div>';
   }
   if($config->get('show_captcha_label_form') == TRUE) {
-    $form['captchaLabel'] = array(
-      '#title' => 'Captcha',
-      '#type' => 'label',
-      '#required' => TRUE
+    $form['captcha'] = array(
+      '#required' => TRUE,
+      '#markup' => '<span class="captcha-label"> Captcha<span class="red">*</span> </span>'. $markup
+    );
+  } else {
+    $form['captcha'] = array(
+      '#required' => TRUE,
+      '#markup' => $markup
     );
   }
-  $form['captcha'] = array(
-    '#required' => TRUE,
-    '#markup' => $markup
-  );
   return $form;
 }
 ?>
