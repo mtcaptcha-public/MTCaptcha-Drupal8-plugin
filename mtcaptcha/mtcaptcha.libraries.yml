@@ -1,25 +1,42 @@
-mtcaptcha:
+mtcaptcha-lib-scripts:
   version: 1.0
   header: true
   js:
+    js/mtcaptcha-common.js: {}
     js/mtcaptcha.js: {}
+    https://service.mtcaptcha.com/mtcv1/client/mtcaptcha.min.js: { type: external,attributes: { async: true } }
+    https://service.mtcaptcha.com/mtcv1/client/mtcaptcha2.min.js: { type: external,attributes: { async: true } }
   css:
     theme:
-      css/mtcaptcha.css: {}
+      css/mtcaptcha-lib.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once
     - core/drupal
     - core/drupalSettings
 
-global-scripts:
+mtcaptcha-lib-common-script:
   version: 1.0
   header: true
   js:
-    js/mtcaptcha-global.js: {}
+    js/mtcaptcha-common.js: {}
   css:
     theme:
-      css/mtcaptcha-global.css: {}
+      css/mtcaptcha-lib.css: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    
+mtcaptcha-admin-scripts:
+  version: 1.0
+  header: true
+  css:
+    theme:
+      css/mtcaptcha-admin.css: {}
+  js:
+    js/mtcaptcha-admin.js: {}    
   dependencies:
     - core/jquery
     - core/jquery.once

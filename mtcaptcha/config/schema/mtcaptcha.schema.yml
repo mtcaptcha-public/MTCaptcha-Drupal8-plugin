@@ -25,6 +25,9 @@ mtcaptcha.settings:
         enablecaptcha:
           type: string
           label: 'Enable MTCaptcha for'
+        custom_config_enable:
+          type: string
+          label: 'Enable custom MTCaptcha configuration'
         type:
           type: string
           label: 'Type'

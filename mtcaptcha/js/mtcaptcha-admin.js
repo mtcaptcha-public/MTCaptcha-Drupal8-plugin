@@ -11,7 +11,6 @@ function enableFields() {
     var checkBoxValue = jQuery("#edit-custom-config-enable");
     var jsonValue = jQuery("#edit-custom-config-setting");
     var siteKey = jQuery("#edit-mtcaptcha-site-key");
-    var privateKey = jQuery("#edit-mtcaptcha-private-key");
     var theme = jQuery("#edit-mtcaptcha-theme");
     var lang = jQuery("#edit-mtcaptcha-language");
     var widgetSize = jQuery("#edit-mtcaptcha-widgetsize");
@@ -24,7 +23,6 @@ function enableFields() {
       } else {
         jQuery(jsonValue).attr("disabled", "disabled");
         jQuery(siteKey).removeAttr("disabled");
-        jQuery(privateKey).removeAttr("disabled");
         jQuery(theme).removeAttr("disabled");
         jQuery(lang).removeAttr("disabled");
         jQuery(widgetSize).removeAttr("disabled");

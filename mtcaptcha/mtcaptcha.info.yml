@@ -1,11 +1,13 @@
 name: MTCaptcha Module
-description: Helps to integrate MTCaptcha in login, registration, reset password and comments form
+description: Helps to integrate MTCaptcha in different forms
 package: Custom
 type: module
-version: 1.0
+version: 2.0
 configure: mtcaptcha.settings
 php: 5.6
 core: 8.x
-libraries:
-  - mtcaptcha/mtcaptcha
-  - mtcaptcha/global-scripts
+core_version_requirement: ^8 || ^9
+libraries: 
+  - mtcaptcha/mtcaptcha-lib-scripts
+  - mtcaptcha/mtcaptcha-admin-scripts
+  - mtcaptcha/mtcaptcha-lib-common-script

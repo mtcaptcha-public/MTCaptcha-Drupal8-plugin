@@ -80,7 +80,7 @@ class MTCaptchaSettings extends ConfigFormBase {
     );
 
     $form['common']['mtcaptcha_enable'] = array(
-      '#default_value' => $config->get('mtcaptcha_form_enable'),
+      '#default_value' => $config->get('mtcaptcha_form_enable') ? $config->get('mtcaptcha_form_enable') : [] ,
       '#title' => $this->t('MTCaptcha is applied for'),
       '#type' => 'checkboxes',
       '#description' => $this->t('Please enable MTCaptcha for above forms'),
@@ -131,7 +131,7 @@ class MTCaptchaSettings extends ConfigFormBase {
       '#default_value' => $config->get('theme'),
       '#description' => $this->t('Defines which theme to use for mtcaptcha.'),
       '#options' => [
-        'standard' => $this->t('standard'),
+        'basic' => $this->t('basic'),
         'overcast' => $this->t('overcast'),
         'neowhite' => $this->t('neowhite'),
         'goldbezel' => $this->t('goldbezel'),
@@ -242,12 +242,13 @@ class MTCaptchaSettings extends ConfigFormBase {
                           2. Visit <a href="http://service.mtcaptcha.com/mtcv1/demo/" target="blank" rel="external">MTCaptcha demo page</a> to customize 
                           the MTCaptcha configuration.<br/> 
                           3. Under Basic Options, Proivde your site key in the Sitekey field. <br/>
-                          4. Customize the <b>Basic Options</b>, <b>Custom Style</b> and <b>Custom Language</b>.<br/>
-                          5. Click on Apply button to view the changes. <br/>
-                          6. If the changes are looks good, 
+                          4. Select the <b>Render Type as "explicit" </b>in the test page.<br/>
+                          5. Customize the <b>Basic Options</b>, <b>Custom Style</b> and <b>Custom Language</b>.<br/>
+                          6. Click on Apply button to view the changes. <br/>
+                          7. If the changes are looks good, 
                           then copy the snippet located inside the <b>script</b> tag under <b>Embed Snippet</b> tab.
                           <br/>
-                          7. Paste the copied snippet to the below textbox. <br/> '),
+                          8. Paste the copied snippet to the below textbox. <br/> '),
       '#attributes' => array(
             'class' => array('captcha-label'), 
       )    
@@ -263,9 +264,11 @@ class MTCaptchaSettings extends ConfigFormBase {
         'lang': 'en',
         'autoFormValidate': true,
         'loadAnimation': true,
+        'render': 'explicit',
+        'renderQueue':[]
        };
      (function(){var mt_service = document.createElement('script');mt_service.async = true;mt_service.src = 'https://service.mtcaptcha.com/mtcv1/client/mtcaptcha.min.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(mt_service);
-     var mt_service2 = document.createElement('script');mt_service2.async = true;mt_service2.src = 'https://service2.mtcaptcha.com/mtcv1/client/mtcaptcha2.min.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(mt_service2);}) ();"),) 
+     var mt_service2 = document.createElement('script');mt_service2.async = true;mt_service2.src = 'https://service.mtcaptcha.com/mtcv1/client/mtcaptcha2.min.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(mt_service2);}) ();"),) 
     ];
 
     return parent::buildForm($form, $form_state);

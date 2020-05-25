@@ -1,10 +1,10 @@
 site_key: ''
 private_key: ''
 show_captcha_label_form: true
-theme: 'standard'
+theme: 'basic'
 language: 'en'
 widgetsize: 'standard'
-enablecaptcha: 'login'
+enablecaptcha: 'all'
 type: 'image'
 size: ''
 tabindex: 0

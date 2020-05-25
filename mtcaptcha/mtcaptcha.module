@@ -5,8 +5,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Component\Serialization\Json;
 
-$configIdList = [];
-
 /**
  * Implements hook_help().
  */
@@ -21,8 +19,8 @@ function mtcaptcha_help($path, $arg) {
 * Implements hook_install().
 */
 function mtcaptcha_install() {
- drupal_set_message(t("Your Module settings are available under !link",
-   ['!link' => t('Administer > configurtion > Devolepment > MTCaptcha settings'),  'admin/config/config/devolepment']
+ drupal_set_message(t("Your Module settings are available under: @link",
+   ['@link' => t('Administer > configurtion > Devolepment > MTCaptcha settings')]
  ));
 }
  
@@ -31,8 +29,11 @@ function mtcaptcha_install() {
 * @param page
 */
 function mtcaptcha_page_attachments_alter(&$page) {
+   $route_name = \Drupal::routeMatch()->getRouteName();
+   if($route_name == "mtcaptcha.settings") {
+    $page['#attached']['library'][] = 'mtcaptcha/mtcaptcha-admin-scripts';
+   }
    $config = \Drupal::config('mtcaptcha.settings');
-   $page['#attached']['library'][] = 'mtcaptcha/global-scripts';
    if($config->get('custom_config_enable') == TRUE) {
       $data =  $config->get('custom_config_setting');
       $page['#attached']['html_head'][] =  [
@@ -49,20 +50,19 @@ function mtcaptcha_page_attachments_alter(&$page) {
         // element when altering.
         'mtcaptcha-custom-config'
       ];
-     
+      $page['#attached']['library'][] = 'mtcaptcha/mtcaptcha-lib-common-script';       
   } else {
-      $GLOBALS['configIdList'] = isset($GLOBALS['configIdList']) ? $GLOBALS['configIdList'] : [];
       $page['#attached']['drupalSettings']['config'] = json_encode(array(
         "sitekey"       => $config->get('site_key'),
         "autoFormValidate"  => (bool)TRUE,     
         "theme"       => $config->get('theme'),
         "render"      => "explicit",
-        "renderQueue"       => $GLOBALS['configIdList'],
+        "renderQueue"       => [],
         "widgetSize"        => $config->get('widgetsize'),
         "enableOption"      => $config->get('enablecaptcha'),
         "lang"        => $config->get('language'),
       ));
-    $page['#attached']['library'][] = 'mtcaptcha/mtcaptcha';
+      $page['#attached']['library'][] = 'mtcaptcha/mtcaptcha-lib-scripts';
   }
 }
 
@@ -74,30 +74,26 @@ function mtcaptcha_form_alter(array &$form, FormStateInterface $form_state, $for
   $config = \Drupal::config('mtcaptcha.settings');
   $user = \Drupal::currentUser();
   $mtcaptcha_other_enable = preg_split('/\s*,\s*/', trim($config->get('other_form_id', '')));
-  $enabled_forms = array_values(array_merge($mtcaptcha_other_enable, array_values($config->get('mtcaptcha_form_enable', []))));
+  $enabled_forms = array_values(array_merge($mtcaptcha_other_enable ? $mtcaptcha_other_enable:[], array_values($config->get('mtcaptcha_form_enable')? $config->get('mtcaptcha_form_enable'):[] )));
   $form_state = get_object_vars($form_state);
- if($form_id == 'mtcaptcha_admin_settings') {
-  $form['#validate'][] = 'mtcaptcha_captcha_admin_validation';
-  return false;
- }
- 
+  if($form_id == 'mtcaptcha_admin_settings') {
+    $form['#validate'][] = 'mtcaptcha_captcha_admin_validation';
+    return false;
+  }
   if(!$user->id() && $form_id == 'user_login_form' && in_array($form_id, $enabled_forms, TRUE) ){
    attachCaptcha($form);
     return false;    
   }
-
   if(!$user->id() && $form_id == 'user_pass' && in_array($form_id, $enabled_forms, TRUE) ){
     attachCaptcha($form);
     return false;
   }
-
   if( in_array($form_id, $enabled_forms, TRUE) && 
     (($user->id() && $config->get('enablecaptcha') == 'login') ||
     (!$user->id()  && $config->get('enablecaptcha') == 'logout') || 
     ($config->get('enablecaptcha') == 'all'))) {      
       attachCaptcha($form);
   }
- 
  }
 
   /**
@@ -114,7 +110,6 @@ function mtcaptcha_captcha_admin_validation(&$form, \Drupal\Core\Form\FormStateI
     return false;
   } else {
     $form['general']['mtcaptcha_site_key']['#required'] = FALSE;
-    // $form_state->clearErrors();
     return true;
   }
 }
@@ -185,26 +180,7 @@ function mtcaptcha_captcha_admin_validation(&$form, \Drupal\Core\Form\FormStateI
       return $response->getBody()->__toString();
    }
  }
- 
- /**
- * Method to push generated random id in renderedQueue
- * @param $randomId
- */
- function pushTorenderQueue($randomId) {?>
-   <script type="text/javascript">
-         if (typeof mtcaptchaConfig != "undefined") {           
-          //  console.log(mtcapthaConfig);
-           // push the random id in render queue
-           mtcaptchaConfig.renderQueue.push(<?php echo "'$randomId'" ?>);
-         }
-         else { <?php
-           $GLOBALS['configIdList'] = isset($GLOBALS['configIdList']) ? $GLOBALS['configIdList'] : [];
-           array_push($GLOBALS['configIdList'], $randomId);
-         ?>
-         }
-   </script><?php
- }
- 
+
 /**
  * Method to attach the captcha form to form fields..
  * @param $form
@@ -213,17 +189,12 @@ function attachCaptcha(array &$form) {
   $config = \Drupal::config('mtcaptcha.settings');
   $form['#validate'][] = 'mtcaptcha_captcha_validation';
   $markup = '';
-  if($config->get('custom_config_enable') == TRUE) {
-    $markup = '<div class="mtcaptcha"></div>';
-  }else{
-    $randomId = "mtcaptcha-" . strval(rand());
-    pushTorenderQueue($randomId);
-    $markup = '<div id="' . $randomId . '"></div>';
-  }
+  $randomId = "mtcaptcha-" . strval(rand());
+  $markup = '<div class="mtcaptcha-container" id="' . $randomId . '"></div>';
   if($config->get('show_captcha_label_form') == TRUE) {
     $form['captcha'] = array(
-      '#required' => TRUE,
-      '#markup' => '<span class="captcha-label"> Captcha<span class="red">*</span> </span>'. $markup
+      '#markup' => '<div class="captcha-label">' . t('Captcha<span class="red">*</span>') . '</div>' . $markup,
+      '#required' => TRUE
     );
   } else {
     $form['captcha'] = array(
