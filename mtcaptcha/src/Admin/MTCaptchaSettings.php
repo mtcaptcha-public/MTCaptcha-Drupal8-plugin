@@ -80,7 +80,7 @@ class MTCaptchaSettings extends ConfigFormBase {
     );
 
     $form['common']['mtcaptcha_enable'] = array(
-      '#default_value' => $config->get('mtcaptcha_form_enable') ? $config->get('mtcaptcha_form_enable') : [] ,
+      '#default_value' => $config->get('form_enable') ? $config->get('form_enable') : [],
       '#title' => $this->t('MTCaptcha is applied for'),
       '#type' => 'checkboxes',
       '#description' => $this->t('Please enable MTCaptcha for above forms'),
@@ -96,7 +96,7 @@ class MTCaptchaSettings extends ConfigFormBase {
       '#type' => 'textfield'
     ];
 
-    $form['common']['show_captcha_label_form'] = [
+    $form['common']['mtcaptcha_show_captcha_label_form'] = [
       '#title' =>  $this->t('Show Captcha label in the form'),
       '#type' => 'checkbox',
       '#default_value' => $config->get('show_captcha_label_form'),
@@ -236,7 +236,7 @@ class MTCaptchaSettings extends ConfigFormBase {
     $form['advanced']['mtcaptcha_custom_config_enable'] = [
       '#title' =>  $this->t('Enable custom MTCaptcha configuration '),
       '#type' => 'checkbox',
-      '#default_value' => $config->get('mtcaptcha_custom_config_enable'),
+      '#default_value' => $config->get('custom_config_enable'),
       '#description' => t('Provides the custom configuration to render the MTCaptcha in your forms.<br/> 
                           1. You have to <a href="https://www.mtcaptcha.com/pricing/" target="blank" rel="external">register your domain</a> and get your required keys.<br/>
                           2. Visit <a href="http://service.mtcaptcha.com/mtcv1/demo/" target="blank" rel="external">MTCaptcha demo page</a> to customize 
@@ -255,7 +255,7 @@ class MTCaptchaSettings extends ConfigFormBase {
     ];
 
     $form['advanced']['mtcaptcha_custom_config_setting'] = [
-      '#default_value' => $config->get('mtcaptcha_custom_config_setting'),
+      '#default_value' => $config->get('custom_config_setting'),
       // '#required' => FALSE,
       '#type' => 'textarea',
       '#attributes' => array('placeholder' => t("var mtcaptchaConfig = {
@@ -282,15 +282,15 @@ class MTCaptchaSettings extends ConfigFormBase {
     $mtcaptchaConfig
       ->set('site_key', $form_state->getValue('mtcaptcha_site_key'))
       ->set('private_key', $form_state->getValue('mtcaptcha_private_key'))
-      ->set('show_captcha_label_form', $form_state->getValue('show_captcha_label_form'))
+      ->set('show_captcha_label_form', $form_state->getValue('mtcaptcha_show_captcha_label_form'))
       ->set('theme', $form_state->getValue('mtcaptcha_theme'))
       ->set('language', $form_state->getValue('mtcaptcha_language'))
       ->set('widgetsize', $form_state->getValue('mtcaptcha_widgetsize'))
       ->set('enablecaptcha', $form_state->getValue('mtcaptcha_enablecaptcha'))
-      ->set('mtcaptcha_form_enable', $form_state->getValue('mtcaptcha_enable'))
+      ->set('form_enable', $form_state->getValue('mtcaptcha_enable'))
       ->set('other_form_id', $form_state->getValue('mtcaptcha_other_enable'))
-      ->set('mtcaptcha_custom_config_enable', $form_state->getValue('mtcaptcha_custom_config_enable'))
-      ->set('mtcaptcha_custom_config_setting', $form_state->getValue('mtcaptcha_custom_config_setting'))
+      ->set('custom_config_enable', $form_state->getValue('mtcaptcha_custom_config_enable'))
+      ->set('custom_config_setting', $form_state->getValue('mtcaptcha_custom_config_setting'))
       ->save();
     parent::submitForm($form, $form_state);
   }

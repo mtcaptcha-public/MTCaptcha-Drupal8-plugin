@@ -10,51 +10,30 @@ mtcaptcha.settings:
     private_key:
       type: string
       label: 'Private Key'
-      type: mapping
-      label: 'Widget settings'
-      mapping:
-        theme:
-          type: string
-          label: 'Theme'
-        language:
-          type: string
-          label: 'Language'
-        widgetsize:
-          type: string
-          label: 'Captcha Widget Size'
-        enablecaptcha:
-          type: string
-          label: 'Enable MTCaptcha for'
-        custom_config_enable:
-          type: string
-          label: 'Enable custom MTCaptcha configuration'
-        type:
-          type: string
-          label: 'Type'
-        size:
-          type: string
-          label: 'Size'
-        tabindex:
-          type: integer
-          label: 'Tabindex'
-        noscript:
-          type: boolean
-          label: 'Enable fallback for browsers with JavaScript disabled'
-        lgin_form:
-          type: boolean
-          label: 'Login Form'
-        registration_form:
-          type: boolean
-          label: 'Registeration Form'
-        lost_password_form:
-          type: boolean
-          label: 'Lost Password Form'
-        change_password_form:
-          type: boolean
-          label: 'Change Password Form'
-        comment_form:
-          type: boolean
-          label: 'Comment Form'
-        contact_form:
-          type: boolean
-          label: 'Contact Form'
+    mtcaptcha_show_captcha_label_form:
+      type: string
+      label: 'Show Captcha label in the form'
+    theme:
+      type: string
+      label: 'Theme'
+    language:
+      type: string
+      label: 'Language'
+    widgetsize:
+      type: string
+      label: 'Captcha Widget Size'
+    enablecaptcha:
+      type: string
+      label: 'Enable MTCaptcha for'
+    other_form_id:
+      type: array
+      label: 'Other Forms to enable'
+    form_enable:
+      type: array
+      label: 'MTCaptcha is applied for'
+    custom_config_enable:
+      type: string
+      label: 'Enable custom MTCaptcha configuration'
+    custom_config_enable: 
+      type: string
+      label: 'Custom MTCaptcha configuration'

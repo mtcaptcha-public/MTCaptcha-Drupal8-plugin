@@ -1,20 +1,12 @@
 site_key: ''
 private_key: ''
-show_captcha_label_form: true
+mtcaptcha_show_captcha_label_form: true
 theme: 'basic'
 language: 'en'
 widgetsize: 'standard'
 enablecaptcha: 'all'
-type: 'image'
-size: ''
-tabindex: 0
-noscript: false
-login_form: false
-registration_form: false
-lost_password_form: false
-change_password_form: false
-comment_form: false
-contact_form: false
-custom_configuration_enable: false
-custom_configuration_settings: ''     
+other_form_id: []
+form_enable: []
+custom_config_enable: false
+custom_config_setting: ''     
 

@@ -34,8 +34,8 @@ function mtcaptcha_page_attachments_alter(&$page) {
     $page['#attached']['library'][] = 'mtcaptcha/mtcaptcha-admin-scripts';
    }
    $config = \Drupal::config('mtcaptcha.settings');
-   if($config->get('mtcaptcha_custom_config_enable') == TRUE) {
-      $data =  $config->get('mtcaptcha_custom_config_setting');
+   if($config->get('custom_config_enable') == TRUE) {
+      $data =  $config->get('custom_config_setting');
       $page['#attached']['html_head'][] =  [
         // The data.
         [
@@ -74,7 +74,7 @@ function mtcaptcha_form_alter(array &$form, FormStateInterface $form_state, $for
   $config = \Drupal::config('mtcaptcha.settings');
   $user = \Drupal::currentUser();
   $mtcaptcha_other_enable = preg_split('/\s*,\s*/', trim($config->get('other_form_id', '')));
-  $enabled_forms = array_values(array_merge($mtcaptcha_other_enable ? $mtcaptcha_other_enable:[], array_values($config->get('mtcaptcha_form_enable')? $config->get('mtcaptcha_form_enable'):[] )));
+  $enabled_forms = array_values(array_merge($mtcaptcha_other_enable ? $mtcaptcha_other_enable:[], array_values($config->get('form_enable')? $config->get('form_enable'):[] )));
   $form_state = get_object_vars($form_state);
   if($form_id == 'mtcaptcha_admin_settings') {
     $form['#validate'][] = 'mtcaptcha_captcha_admin_validation';
