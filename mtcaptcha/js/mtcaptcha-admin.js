@@ -1,15 +1,15 @@
 
 jQuery(document).ready(function () {   
     enableFields();
-    var checkBoxValue = jQuery("#edit-custom-config-enable");
+    var checkBoxValue = jQuery("#edit-mtcaptcha-custom-config-enable");
     jQuery(checkBoxValue).click(function () {
         enableFields();
     });
 });
 
 function enableFields() {
-    var checkBoxValue = jQuery("#edit-custom-config-enable");
-    var jsonValue = jQuery("#edit-custom-config-setting");
+    var checkBoxValue = jQuery("#edit-mtcaptcha-custom-config-enable");
+    var jsonValue = jQuery("#edit-mtcaptcha-custom-config-setting");
     var siteKey = jQuery("#edit-mtcaptcha-site-key");
     var theme = jQuery("#edit-mtcaptcha-theme");
     var lang = jQuery("#edit-mtcaptcha-language");

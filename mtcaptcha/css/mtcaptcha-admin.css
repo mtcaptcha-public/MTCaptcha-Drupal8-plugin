@@ -1,6 +1,6 @@
 .captcha-label + .option {
     font-weight: bold !important;
 }
-textarea#edit-custom-config-setting {
+textarea#edit-mtcaptcha-custom-config-setting {
     width: 50%;
 }

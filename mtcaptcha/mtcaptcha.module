@@ -34,8 +34,8 @@ function mtcaptcha_page_attachments_alter(&$page) {
     $page['#attached']['library'][] = 'mtcaptcha/mtcaptcha-admin-scripts';
    }
    $config = \Drupal::config('mtcaptcha.settings');
-   if($config->get('custom_config_enable') == TRUE) {
-      $data =  $config->get('custom_config_setting');
+   if($config->get('mtcaptcha_custom_config_enable') == TRUE) {
+      $data =  $config->get('mtcaptcha_custom_config_setting');
       $page['#attached']['html_head'][] =  [
         // The data.
         [
@@ -102,23 +102,28 @@ function mtcaptcha_form_alter(array &$form, FormStateInterface $form_state, $for
   * @param form_state
  */ 
 function mtcaptcha_captcha_admin_validation(&$form, FormStateInterface $form_state) {
-  $custom_config  = $form_state->getValue('custom_config_enable');
+  $custom_config  = $form_state->getValue('mtcaptcha_custom_config_enable');
   $site_key  = $form_state->getValue('mtcaptcha_site_key');
+  $custom_config_value  = $form_state->getValue('mtcaptcha_custom_config_setting');
   if(!$custom_config && trim($site_key) == "") {
     $form['general']['mtcaptcha_site_key']['#required'] = TRUE;
-    $form_state->setErrorByName('mtcaptcha',"Site key is required");
+    $form['advanced']['mtcaptcha_custom_config_setting']['#required'] = FALSE;
+    $form_state->setErrorByName('mtcaptcha',"Site key field is required");
     return false;
-  } else {
+  } else if($custom_config && trim($custom_config_value) == "" ) {
     $form['general']['mtcaptcha_site_key']['#required'] = FALSE;
-    return true;
+    $form['advanced']['mtcaptcha_custom_config_setting']['#required'] = TRUE;    
+    $form_state->setErrorByName('mtcaptcha',"Custom MTCaptcha Configuration field is required");    
+    return false;
   }
+  return true;
 }
  /**
   * Method to validate captcha while form submission
   * @param form
   * @param form_state
  */ 
- function mtcaptcha_captcha_validation(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+ function mtcaptcha_captcha_validation(&$form, FormStateInterface $form_state) {
    $config = \Drupal::config('mtcaptcha.settings');
    $mtcaptcha_private_key = $config->get('private_key');
    if (empty($_POST['mtcaptcha-verifiedtoken']) || empty($mtcaptcha_private_key)) {

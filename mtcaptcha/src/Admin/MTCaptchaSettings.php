@@ -233,10 +233,10 @@ class MTCaptchaSettings extends ConfigFormBase {
       '#open' => TRUE 
     ];
 
-    $form['advanced']['custom_config_enable'] = [
+    $form['advanced']['mtcaptcha_custom_config_enable'] = [
       '#title' =>  $this->t('Enable custom MTCaptcha configuration '),
       '#type' => 'checkbox',
-      '#default_value' => $config->get('custom_config_enable'),
+      '#default_value' => $config->get('mtcaptcha_custom_config_enable'),
       '#description' => t('Provides the custom configuration to render the MTCaptcha in your forms.<br/> 
                           1. You have to <a href="https://www.mtcaptcha.com/pricing/" target="blank" rel="external">register your domain</a> and get your required keys.<br/>
                           2. Visit <a href="http://service.mtcaptcha.com/mtcv1/demo/" target="blank" rel="external">MTCaptcha demo page</a> to customize 
@@ -254,9 +254,9 @@ class MTCaptchaSettings extends ConfigFormBase {
       )    
     ];
 
-    $form['advanced']['custom_config_setting'] = [
-      '#default_value' => $config->get('custom_config_setting'),
-      '#required' => FALSE,
+    $form['advanced']['mtcaptcha_custom_config_setting'] = [
+      '#default_value' => $config->get('mtcaptcha_custom_config_setting'),
+      // '#required' => FALSE,
       '#type' => 'textarea',
       '#attributes' => array('placeholder' => t("var mtcaptchaConfig = {
         'sitekey': 'YOUR SITE KEY',
@@ -289,8 +289,8 @@ class MTCaptchaSettings extends ConfigFormBase {
       ->set('enablecaptcha', $form_state->getValue('mtcaptcha_enablecaptcha'))
       ->set('mtcaptcha_form_enable', $form_state->getValue('mtcaptcha_enable'))
       ->set('other_form_id', $form_state->getValue('mtcaptcha_other_enable'))
-      ->set('custom_config_enable', $form_state->getValue('custom_config_enable'))
-      ->set('custom_config_setting', $form_state->getValue('custom_config_setting'))
+      ->set('mtcaptcha_custom_config_enable', $form_state->getValue('mtcaptcha_custom_config_enable'))
+      ->set('mtcaptcha_custom_config_setting', $form_state->getValue('mtcaptcha_custom_config_setting'))
       ->save();
     parent::submitForm($form, $form_state);
   }
