@@ -73,7 +73,8 @@ function mtcaptcha_page_attachments_alter(&$page) {
 function mtcaptcha_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   $config = \Drupal::config('mtcaptcha.settings');
   $user = \Drupal::currentUser();
-  $mtcaptcha_other_enable = preg_split('/\s*,\s*/', trim($config->get('other_form_id', '')));
+  $mtcaptcha_other_form_id = !empty($config->get('other_form_id', '')) ? trim($config->get('other_form_id', '')) : "";
+  $mtcaptcha_other_enable = preg_split('/\s*,\s*/', $mtcaptcha_other_form_id);
   $enabled_forms = array_values(array_merge($mtcaptcha_other_enable ? $mtcaptcha_other_enable:[], array_values($config->get('form_enable')? $config->get('form_enable'):[] )));
   $form_state = get_object_vars($form_state);
   if($form_id == 'mtcaptcha_admin_settings') {

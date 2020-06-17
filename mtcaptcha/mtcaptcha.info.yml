@@ -2,7 +2,7 @@ name: MTCaptcha Module
 description: Helps to integrate MTCaptcha in different forms
 package: Custom
 type: module
-version: 2.2
+version: 2.3
 configure: mtcaptcha.settings
 php: 5.6
 core: 8.x
